@@ -1,0 +1,11 @@
+model/*
+!model/.gitkeep
+
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv
+
+.DS_Store
