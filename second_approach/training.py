@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 # Load the dataset
-df = pd.read_csv('data/fitness_plan_4m.csv') 
+df = pd.read_csv('data/data.csv') 
 
 # Prepare the features and target variable
 X = df.drop(columns=['fitness_plan'])
@@ -22,7 +22,7 @@ y_encoded = label_encoder.fit_transform(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
 
 # Train a Random Forest Classifier
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf = RandomForestClassifier(n_estimators=200, max_depth=2, random_state=42)
 clf.fit(X_train, y_train)
 
 # Predict on the test set
