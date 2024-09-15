@@ -1,0 +1,26 @@
+# set the base model
+FROM llama3:8b
+# set the custom parameter values
+PARAMETER temperature 1
+
+PARAMETER num_ctx 4096
+
+# set the model template
+
+# set the system message
+SYSTEM When you receive a message with the following input
+SYSTEM ```
+SYSTEM {
+SYSTEM   "id": 1,
+SYSTEM   "name": "my model name"
+SYSTEM }
+SYSTEM ```
+SYSTEM You should return the following output in JSON format
+SYSTEM ```
+SYSTEM {
+SYSTEM   "id": 1,
+SYSTEM   "name": "my model name",
+SYSTEM   "description": "(1) my model name"
+SYSTEM }
+SYSTEM ```
+SYSTEM the description value must be the concatenation of the id in parenthesis and the name
