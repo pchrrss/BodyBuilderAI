@@ -14,7 +14,9 @@ timesPerWeeks = list(range(1, 7))
 workoutType = ["strength training", "HIIT and strength training", ]
 
 ageRange = random.choice(ageRanges)
+bodyType = random.choice(bodyTypes)
 goal = random.choice(goals)
+goal2 = random.choice(goals)
 fatRange = random.choice(fatRanges)
 focusArea = random.choice(focusAreas)
 fitnessLevel = random.choice(fitnessLevels)
@@ -23,16 +25,25 @@ timesPerWeek = random.choice(timesPerWeeks)
 
 model = "llama3:latest"
 
-prompt = (f"""generate one realistically believable fitness plan for a person with the following characteristics:
-          {{
-            workoutType: workoutType,
-            intensity: intensity,
-            frequencyIntensity: frequencyIntensity,
-            equipment: equipmentExercises,
-            focusExercises: focusExercises,
-            recommendedPlan: 'workoutType' with 'equipmentExercises', focusing on 'focusArea' with 'intensity' intensity, 'timesPerWeek' times per week.`,
-          }}
-          Respond using JSON. Key names should have no backslashes, values should use plain ascii with no special characters.
+prompt = (f"""
+            I am a {ageRange} years old person with a {bodyType} body type. My goal is to {goal}, and I want to focus on my {goal} and {goal2}. Currently, my body fat percentage is around {fatRange}, and my fitness level is {fitnessLevel}/10. I have access to {equipment}, and I plan to work out {timesPerWeek} days a week.
+            Can you generate a fitness plan for me in JSON format based on these details, including the following structure:
+            * age_range: my age range.
+            * body_type: my body type.
+            * goal: my fitness goal.
+            * focus_areas: areas I want to focus on.
+            * body_fat_range: my body fat range.
+            * fitness_level: my current fitness level.
+            * equipment: the equipment I have access to.
+            * workout_frequency_per_week: the number of days I will work out each week.
+            * workout_plan: a breakdown of the workouts for each day per week I plan to work out, with:
+                * day: the day of the week.
+                * focus_area: the main focus area for the day.
+                * exercises: a list of exercises for the day, With:
+                    * name: the name of the exercise.
+                    * sets: the number of sets for the exercise.
+                    * reps: the number of repetitions per set.
+            The output should be structured as a JSON object with detailed values for each field. Key names should have no backslashes, values should use plain ascii with no special characters.
           """)
 
 data = {
@@ -43,18 +54,8 @@ data = {
     "options": {"temperature": 2.5, "top_p": 0.99, "top_k": 100},
 }
 
-print(f"""
-    Generate the recommended fitness plan for this input:
-    {{
-        ageRange: {ageRange},
-        goal: {goal},
-        fatRange: {fatRange},
-        focusArea: {focusArea},
-        fitnessLevel: {fitnessLevel},
-        equipment: {equipment},
-        timesPerWeek: {timesPerWeek}
-    }}
-    """)
+print(f"{prompt}")
+
 try:
     response = requests.post("http://localhost:11434/api/generate", json=data, stream=False)
 
