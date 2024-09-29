@@ -27,34 +27,47 @@ ollama create my-model -f my-file
 ```sh
 % python body-builder-plan-generator.py
 
-    Generate the recommended fitness plan for this input:
-    {
-        ageRange: 30-39,
-        goal: lose weight,
-        fatRange: 40+%,
-        focusArea: full body,
-        fitnessLevel: 8,
-        equipment: full equipment,
-        timesPerWeek: 5
-    }
+prompt:
+- workout_plan: an array of for each day per week I plan to work out, with:
+	-  day: a number from 1 to 7 representing the day of the week (from monday to sunday)
+		- focus_area: the main focus area for the training.
+		- exercises: an array of exercises for the day, With:
+			- name: the name of the exercise.
+			- instruction: give some instructions to how apply correctly the exercise.
+			- sets: the number of sets for the exercise.
+			- reps: the number of repetitions per set.
 
-{
-  "workoutType": "Cardio and Strength",
-  "intensity": "Moderate to High",
-  "frequencyIntensity": {
-    "Low to Medium Impact": 3,
-    "High Intensity": 1
-  },
-  "equipmentExercises": [
+Example of output
+"workout_plan": [
     {
-      "treadmillRun": true,
-      "rowMachineRow": true,
-      "ellipticaltrainerWorkout": true,
-      "freeweightliftingWeights": false
+      "day": 2,
+      "focus_area": "Cardio",
+      "exercises": [
+        {
+          "name": "Brisk Walking",
+          "instruction": "Walk at a brisk pace for 30 minutes, aiming for a moderate intensity.",
+          "sets": 1,
+          "reps": null
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "focus_area": "Strength Training",
+      "exercises": [
+        {
+          "name": "Squats",
+          "instruction": "Stand with feet shoulder-width apart, then bend knees and lower body until thighs are parallel to the ground. Push back up to starting position.",
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "name": "Push-ups",
+          "instruction": "Start in a plank position with hands shoulder-width apart, then lower body until chest nearly touches the ground. Push back up to starting position.",
+          "sets": 3,
+          "reps": 10
+        }
+      ]
     }
-  ],
-  "focusExercises": [
-    "Increasing Distance Running"
-  ]
-}
+]
 ```

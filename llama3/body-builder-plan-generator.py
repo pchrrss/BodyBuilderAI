@@ -23,38 +23,33 @@ fitnessLevel = random.choice(fitnessLevels)
 equipment = random.choice(equipments)
 timesPerWeek = random.choice(timesPerWeeks)
 
-model = "llama3:latest"
+model = "llama3"
 
 prompt = (f"""
+            Your output should be structured as a valid JSON object with detailed values for each field. Key names and values should have no backslashes, values should use plain ascii with no special characters.
             I am a {ageRange} years old person with a {bodyType} body type. My goal is to {goal}, and I want to focus on my {goal} and {goal2}. Currently, my body fat percentage is around {fatRange}, and my fitness level is {fitnessLevel}/10. I have access to {equipment}, and I plan to work out {timesPerWeek} days a week.
             Can you generate a fitness plan for me in JSON format based on these details, including the following structure:
-            * age_range: my age range.
-            * body_type: my body type.
-            * goal: my fitness goal.
-            * focus_areas: areas I want to focus on.
-            * body_fat_range: my body fat range.
-            * fitness_level: my current fitness level.
-            * equipment: the equipment I have access to.
-            * workout_frequency_per_week: the number of days I will work out each week.
-            * workout_plan: a breakdown of the workouts for each day per week I plan to work out, with:
-                * day: the day of the week.
-                * focus_area: the main focus area for the day.
-                * exercises: a list of exercises for the day, With:
+            * workout_plan: an array of for each day per week I plan to work out, with:
+                * day: a number from 1 to 7 representing the day of the week (from monday to sunday).
+                * focus_area: the main focus area for the training.
+                * exercises: an array of exercises for the day, With:
                     * name: the name of the exercise.
+                    * instruction: give some instructions to how apply correctly the exercise.
                     * sets: the number of sets for the exercise.
                     * reps: the number of repetitions per set.
-            The output should be structured as a JSON object with detailed values for each field. Key names should have no backslashes, values should use plain ascii with no special characters.
           """)
+
+# Verify the JSON is valid before sending it back, in.
 
 data = {
     "prompt": prompt,
     "model": model,
     "format": "json",
     "stream": False,
-    "options": {"temperature": 2.5, "top_p": 0.99, "top_k": 100},
+    "options": {"temperature": 0.1, "top_p": 0.99, "top_k": 100},
 }
 
-print(f"{prompt}")
+print(f"prompt = {prompt}")
 
 try:
     response = requests.post("http://localhost:11434/api/generate", json=data, stream=False)
@@ -66,8 +61,9 @@ try:
 
         # Check if the 'response' key is in the JSON
         if "response" in json_data:
+            print(f"response = {json_data["response"]}")
             # Print the generated JSON data nicely formatted
-            print(json.dumps(json.loads(json_data["response"]), indent=2))
+            print(f"output = {json.dumps(json.loads(json_data["response"]), indent=2)}")
         else:
             # If 'response' key is not found, print the entire JSON response
             print("Key 'response' not found in the response:")
