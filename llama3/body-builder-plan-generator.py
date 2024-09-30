@@ -11,8 +11,6 @@ fitnessLevels = list(range(1, 11))
 equipments = ['no equipment', 'basic equipment', 'full equipment']
 timesPerWeeks = list(range(1, 7))
 
-workoutType = ["strength training", "HIIT and strength training", ]
-
 ageRange = random.choice(ageRanges)
 bodyType = random.choice(bodyTypes)
 goal = random.choice(goals)
@@ -23,10 +21,9 @@ fitnessLevel = random.choice(fitnessLevels)
 equipment = random.choice(equipments)
 timesPerWeek = random.choice(timesPerWeeks)
 
-model = "llama3"
+model = "body-builder-model:latest"
 
 prompt = (f"""
-            Your output should be structured as a valid JSON object with detailed values for each field. Key names and values should have no backslashes, values should use plain ascii with no special characters.
             I am a {ageRange} years old person with a {bodyType} body type. My goal is to {goal}, and I want to focus on my {goal} and {goal2}. Currently, my body fat percentage is around {fatRange}, and my fitness level is {fitnessLevel}/10. I have access to {equipment}, and I plan to work out {timesPerWeek} days a week.
             Can you generate a fitness plan for me in JSON format based on these details, including the following structure:
             * workout_plan: an array of for each day per week I plan to work out, with:
@@ -61,7 +58,7 @@ try:
 
         # Check if the 'response' key is in the JSON
         if "response" in json_data:
-            print(f"response = {json_data["response"]}")
+            # print(f"response = {json_data["response"]}")
             # Print the generated JSON data nicely formatted
             print(f"output = {json.dumps(json.loads(json_data["response"]), indent=2)}")
         else:

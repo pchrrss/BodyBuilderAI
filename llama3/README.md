@@ -22,6 +22,11 @@ SYSTEM When you receive a message with the following input
 ```sh
 ollama create my-model -f my-file
 ```
+To create the body builder model: 
+```sh
+ollama create body-builder-model -f bodyBuilderLlam3Model
+```
+
 # Create a python program to generate a fitness plan
 ## Example of output
 ```sh
