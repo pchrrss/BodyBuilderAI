@@ -1,6 +1,6 @@
-import requests
-import json
 import random
+
+from call_llama import call_llama
 
 ageRanges = ['18-29', '30-39', '40-49', '50-59', '60+']
 bodyTypes = ['slim', 'average', 'heavy']
@@ -21,14 +21,15 @@ fitnessLevel = random.choice(fitnessLevels)
 equipment = random.choice(equipments)
 timesPerWeek = random.choice(timesPerWeeks)
 
-model = "body-builder-model:latest"
+model = "body-builder-llama3-1:latest"
+restdays = 7 - timesPerWeek
 
 prompt = (f"""
             I am a {ageRange} years old person with a {bodyType} body type. My goal is to {goal}, and I want to focus on my {goal} and {goal2}. Currently, my body fat percentage is around {fatRange}, and my fitness level is {fitnessLevel}/10. I have access to {equipment}, and I plan to work out {timesPerWeek} days a week.
             Can you generate a fitness plan for me in JSON format based on these details, including the following structure:
-            * workout_plan: an array of for each day per week I plan to work out, with:
-                * day: a number from 1 to 7 representing the day of the week (from monday to sunday).
-                * focus_area: the main focus area for the training.
+            * workout_plan: an array of 7 elements, with {timesPerWeek} days of training and {restdays} rest days, with:
+                * day: a string representing week's day of the training.
+                * focus_area: the main focus area for the training, if it's a rest day, the focus area will 'Rest day'.
                 * exercises: an array of exercises for the day, With:
                     * name: the name of the exercise.
                     * instruction: give some instructions to how apply correctly the exercise.
@@ -48,26 +49,4 @@ data = {
 
 print(f"prompt = {prompt}")
 
-try:
-    response = requests.post("http://localhost:11434/api/generate", json=data, stream=False)
-
-    # Check if the response was successful
-    if response.status_code == 200:
-        # Parse the JSON response
-        json_data = response.json()
-
-        # Check if the 'response' key is in the JSON
-        if "response" in json_data:
-            # print(f"response = {json_data["response"]}")
-            # Print the generated JSON data nicely formatted
-            print(f"output = {json.dumps(json.loads(json_data["response"]), indent=2)}")
-        else:
-            # If 'response' key is not found, print the entire JSON response
-            print("Key 'response' not found in the response:")
-            print(json.dumps(json_data, indent=2))
-    else:
-        print(f"Request failed with status code: {response.status_code}")
-        print(f"Response content: {response.text}")
-except requests.exceptions.RequestException as e:
-    # Handle connection errors or timeouts
-    print(f"An error occurred: {e}")
+call_llama(data)

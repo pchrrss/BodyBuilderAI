@@ -24,7 +24,7 @@ ollama create my-model -f my-file
 ```
 To create the body builder model: 
 ```sh
-ollama create body-builder-model -f bodyBuilderLlam3Model
+ollama create body-builder-model -f body-builder-llama3-2-model
 ```
 
 # Create a python program to generate a fitness plan
