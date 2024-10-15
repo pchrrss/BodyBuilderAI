@@ -21,7 +21,7 @@ fitnessLevel = random.choice(fitnessLevels)
 equipment = random.choice(equipments)
 timesPerWeek = random.choice(timesPerWeeks)
 
-model = "body-builder-llama3-1:latest"
+model = "body-builder-alpaca-model:latest"
 restdays = 7 - timesPerWeek
 
 prompt = (f"""
